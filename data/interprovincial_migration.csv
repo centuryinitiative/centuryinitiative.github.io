@@ -1,0 +1,93 @@
+# =============================================================================
+# INTERPROVINCIAL MIGRATION (annual move probabilities)
+# =============================================================================
+# For an individual currently in `from_province`, the probability of moving
+# to `to_province` during one simulation year. P(stay) is computed
+# automatically as 1 - sum(transitions out).
+#
+# This file uses a sparse format: only non-trivial flows are listed.
+# Default move rate (any province to any other) when not listed = 0.0008.
+#
+# Calibration source: StatCan Table 17-10-0015 (interprovincial migrants
+# by province, annual). Stylized rates: roughly 1.5% of Canadians change
+# province each year, weighted toward economically dynamic provinces.
+#
+# Notable patterns:
+#  - QC → ROC outflow: ~0.7%/year of QC pop in 2010s, dropping to ~0.4%
+#    by 2024 (the −1,900 net of 2024 reflects much lower net loss)
+#  - Atlantic provinces: high outflow to ON/AB historically
+#  - AB attracts during commodity booms; lost ~25k net in 2015-16 bust
+#  - BC consistently attracts net migration
+#
+# We provide period anchors for 1971, 2000, 2024 — interpolated linearly.
+#
+# Columns: period_year, from_province, to_province, annual_prob, note
+# =============================================================================
+period_year,from_province,to_province,annual_prob,note
+# --- 1971 ---
+1971,NL,ON,0.012,Atlantic outflow
+1971,NL,AB,0.005,
+1971,PE,ON,0.010,
+1971,NS,ON,0.010,
+1971,NS,AB,0.004,
+1971,NB,ON,0.010,
+1971,NB,QC,0.003,Bilingual proximity
+1971,QC,ON,0.008,Pre-1976 anglo exodus already underway
+1971,QC,NB,0.001,
+1971,ON,QC,0.003,
+1971,ON,AB,0.005,
+1971,ON,BC,0.004,
+1971,MB,ON,0.008,
+1971,MB,AB,0.006,
+1971,MB,BC,0.005,
+1971,SK,AB,0.012,Prairie outflow
+1971,SK,BC,0.006,
+1971,AB,BC,0.008,
+1971,AB,ON,0.005,
+1971,BC,AB,0.005,
+1971,BC,ON,0.004,
+# --- 2000 ---
+2000,NL,ON,0.014,
+2000,NL,AB,0.010,Oil-patch pull
+2000,PE,ON,0.011,
+2000,NS,ON,0.011,
+2000,NS,AB,0.007,
+2000,NB,ON,0.010,
+2000,NB,QC,0.003,
+2000,QC,ON,0.007,Post-referendum stabilization
+2000,QC,NB,0.001,
+2000,ON,QC,0.003,
+2000,ON,AB,0.006,
+2000,ON,BC,0.005,
+2000,MB,ON,0.008,
+2000,MB,AB,0.008,
+2000,MB,BC,0.005,
+2000,SK,AB,0.014,
+2000,SK,BC,0.006,
+2000,AB,BC,0.008,
+2000,AB,ON,0.005,
+2000,BC,AB,0.006,
+2000,BC,ON,0.004,
+# --- 2024 ---
+2024,NL,ON,0.012,Some return migration
+2024,NL,AB,0.008,
+2024,PE,ON,0.010,
+2024,NS,ON,0.010,
+2024,NS,AB,0.006,
+2024,NB,ON,0.009,
+2024,NB,QC,0.004,
+2024,QC,ON,0.005,Net loss shrinking; 2024 net = -1.9k
+2024,QC,NB,0.001,
+2024,QC,AB,0.002,
+2024,ON,QC,0.003,
+2024,ON,AB,0.007,2022-24 oil resurgence
+2024,ON,BC,0.004,
+2024,MB,ON,0.008,
+2024,MB,AB,0.009,
+2024,MB,BC,0.005,
+2024,SK,AB,0.013,
+2024,SK,BC,0.006,
+2024,AB,BC,0.008,
+2024,AB,ON,0.005,
+2024,BC,AB,0.007,
+2024,BC,ON,0.004,

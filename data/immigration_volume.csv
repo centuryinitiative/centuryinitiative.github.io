@@ -1,0 +1,43 @@
+# =============================================================================
+# IMMIGRATION VOLUME BY YEAR
+# =============================================================================
+# Annual permanent resident landings (people, not thousands).
+#
+# 1971–2024: Historical from IRCC / StatCan landings data.
+# 2025–2150: Projected. Re-tuned (2026) alongside the provincial net-growth
+#            recalibration so the "mid" scenario still reaches ~100M by 2100.
+#            With below-replacement natural change now fit to the provincial
+#            census series, hitting 100M genuinely requires ~1.1–1.5M
+#            landings/yr — far above today's ~500k, consistent with the scale
+#            of immigration the Century Initiative's 100M target implies.
+#
+# Real Canadian immigration history (rounded):
+#   1971: ~122k    1986: ~99k    2000: ~227k    2015: ~272k    2023: ~471k
+#
+# Linear interpolation between years.
+#
+# Columns: year, mid_volume, note
+# =============================================================================
+year,mid_volume,note
+1971,122000,Historical IRCC
+1975,188000,Historical
+1980,143000,Historical
+1985,84000,Historical low
+1990,216000,Historical
+1995,212000,Historical
+2000,227000,Historical
+2005,262000,Historical
+2010,281000,Historical
+2015,272000,Historical
+2020,184000,COVID dip
+2021,406000,Historical post-COVID surge
+2022,438000,Historical
+2023,471000,Historical IRCC
+2024,485000,IRCC plan
+2025,500000,IRCC 2025 plan
+2030,1085000,Projection — re-tuned so mid hits ~100M by 2100 (see note below)
+2040,1255000,Projection
+2050,1410000,Projection
+2075,1535000,Projection — sustained high intake
+2100,1490000,Projection — stable
+2150,1395000,Projection — slight tapering

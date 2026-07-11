@@ -1,0 +1,31 @@
+# =============================================================================
+# LANGUAGE-CONDITIONAL MIGRATION MULTIPLIERS
+# =============================================================================
+# The base interprovincial_migration.csv gives an average move probability
+# per origin-destination pair. In reality, some linguistic groups are
+# stickier or more mobile than others.
+#
+# These multipliers scale the OFF-DIAGONAL move probabilities in the base
+# matrix. A multiplier of 1.0 = use base rate unchanged.
+#
+# Key empirical facts:
+#  - Francophone Quebecers almost never leave QC (sticky)
+#  - Anglophones and allophones in QC have historically left at high rates
+#    (post-1976 anglo exodus; 400k+ left over 30 years)
+#  - French-speaking immigrants outside Quebec have the HIGHEST interprovincial
+#    migration rate of any group (~92 per 1000), with 58.6% moving to QC
+#
+# Format: per (province, language), a multiplier applied to that province's
+# out-migration rate. Unlisted combinations default to 1.0.
+#
+# Columns: province, language, multiplier, note
+# =============================================================================
+province,language,multiplier,note
+QC,fr,0.30,Francophone Quebecers extremely unlikely to leave
+QC,en,2.50,Historical anglo exodus; post-1976 very high mobility
+QC,allo,1.50,Allophones leave QC above average
+ON,fr,1.50,Franco-Ontarians above-average mobility
+NB,fr,0.70,Acadian stickiness
+MB,fr,1.30,Small francophone community often moves
+AB,fr,2.00,Franco-Albertans highly mobile (oil workers)
+BC,fr,1.80,Small dispersed community

@@ -1,0 +1,18 @@
+# =============================================================================
+# HISTORICAL FRANCOPHONE SHARE (calibration target)
+# =============================================================================
+# Source: Statistics Canada Census 1971–2021 — French spoken most often at home.
+# Used to validate the model's 1971–2021 trajectory and to fit the language
+# transfer matrices (file: language_transfer_matrices.csv).
+#
+# Columns: year, fr_share_canada, fr_share_quebec, source
+# =============================================================================
+year,fr_share_canada,fr_share_quebec,source
+1971,0.257,0.810,Census 1971
+1991,0.232,0.828,Census 1991
+1996,0.226,0.831,Census 1996
+2001,0.220,0.831,Census 2001
+2006,0.214,0.819,Census 2006
+2011,0.206,0.800,Census 2011
+2016,0.200,0.790,Census 2016
+2021,0.192,0.775,Census 2021

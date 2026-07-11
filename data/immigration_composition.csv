@@ -1,0 +1,54 @@
+# =============================================================================
+# IMMIGRATION LINGUISTIC COMPOSITION (region-split) — TREND CONTINUATION
+# =============================================================================
+# Linguistic profile of immigrants AT TIME OF ARRIVAL, split by destination
+# region (Quebec vs Rest of Canada). This split is critical because Quebec's
+# selection process produces ~50%+ francophone immigrants while ROC has
+# historically run at 4-6% francophone share.
+#
+# region: "QC" or "ROC"
+# fr_share = share of immigrants who are francophone (French as first lang)
+# en_share = share who are anglophone
+# allophone share is computed as 1 - fr_share - en_share
+#
+# Sources (calibration 1971–2025):
+#  - QC: OQLF / MIFI data. 2021: ~54.5% French FOLS, peak 60.5% in 2016.
+#  - ROC: Federal francophone target 4.4% (set 2003, first met 2022).
+#
+# Projection philosophy (post-2025): TREND CONTINUATION, not policy targets.
+#  - QC: The 2016→2021 decline (60.5%→54.5%) reflects structural shifts in
+#    source countries and francophone selection fatigue. Bill 96 stabilises
+#    it briefly at 56% in 2025, then the post-peak drift resumes at ~−0.6%/5yr.
+#  - ROC: The 2022–2025 jump (4.5%→6%) was partly policy, partly a surge of
+#    francophone Africans. We extrapolate that modest trend (+0.3%/5yr)
+#    rather than the aspirational federal 10.5% target.
+#
+# Linear interpolation between rows within each region.
+#
+# Columns: year, region, fr_share, en_share, note
+# =============================================================================
+year,region,fr_share,en_share,note
+1971,QC,0.350,0.180,Pre-Bill-101 era
+1981,QC,0.380,0.150,Bill 101 effect (1977)
+1991,QC,0.420,0.140,
+2001,QC,0.510,0.140,
+2011,QC,0.570,0.130,
+2016,QC,0.605,0.130,Peak per OQLF
+2021,QC,0.545,0.130,2021 OQLF figure
+2025,QC,0.560,0.130,Bill 96 enforcement (calibration end)
+2035,QC,0.530,0.131,Post-peak drift resumes (-0.3%/yr)
+2050,QC,0.490,0.132,Trend continuation
+2075,QC,0.450,0.133,Trend continuation
+2100,QC,0.415,0.134,Trend continuation
+2150,QC,0.390,0.134,
+1971,ROC,0.020,0.350,Negligible francophone targeting
+1990,ROC,0.022,0.310,
+2003,ROC,0.030,0.290,4.4% target set
+2015,ROC,0.030,0.270,Target unmet
+2022,ROC,0.045,0.260,First year target met
+2025,ROC,0.089,0.255,IRCC 2025 actual (8.9% per IRCC annual report)
+2030,ROC,0.095,0.253,Approaching federal 12% target (2029)
+2040,ROC,0.088,0.250,Target not fully sustained — trend drift
+2050,ROC,0.082,0.248,Gradual drift
+2100,ROC,0.075,0.245,Slow decline as source-country mix shifts
+2150,ROC,0.070,0.243,

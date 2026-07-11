@@ -1,0 +1,36 @@
+# =============================================================================
+# HISTORICAL CANADA POPULATION & PROJECTION TARGETS
+# =============================================================================
+# Used by the simulator as calibration anchors.
+#
+# 1971–2021: Statistics Canada Census of Canada (decennial/quinquennial)
+# 2025:      StatCan quarterly population estimate Q1 2025 (~41.5M)
+# 2025–2100: Custom trajectory hitting 100M in 2100
+#            (mid scenario only — low/high are computed in scenarios.csv)
+#
+# This file is informational + used as a calibration target. The simulator
+# tunes immigration to land near the "target_total_millions" column for
+# its scenario.
+#
+# Columns: year, target_total_millions, source_note
+# =============================================================================
+year,target_total_millions,source_note
+1971,21.57,1971 Census
+1981,24.34,1981 Census
+1991,27.30,1991 Census
+2001,30.01,2001 Census
+2006,31.61,2006 Census
+2011,33.48,2011 Census
+2016,35.15,2016 Census
+2021,36.99,2021 Census
+2025,41.55,StatCan Q1 2025 estimate (41.549M)
+2030,45.50,Mid trajectory toward 100M
+2040,55.00,Mid trajectory toward 100M
+2050,65.00,Mid trajectory toward 100M
+2060,74.50,Mid trajectory toward 100M
+2070,82.50,Mid trajectory toward 100M
+2080,89.00,Mid trajectory toward 100M
+2090,95.00,Mid trajectory toward 100M
+2100,100.00,Target — 100M by 2100
+2125,108.00,Slow growth post-2100
+2150,115.00,Slow growth post-2100

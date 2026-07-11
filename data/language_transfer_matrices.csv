@@ -1,0 +1,85 @@
+# =============================================================================
+# LANGUAGE TRANSFER MATRICES (annual transition probabilities)
+# =============================================================================
+# Each row defines an annual probability that an individual in `province`
+# whose home language is `from_lang` will SHIFT to `to_lang` during one
+# year of simulation.
+#
+# Implicit assumption: P(stay) = 1 - sum(P(transitions)).
+# So you only list the OFF-DIAGONAL (transition) entries; staying is
+# computed automatically.
+#
+# Calibration source: Statistics Canada Language Projections 2011–2036
+# (Cat. 89-657-X) and OQLF data sheets.
+#  - QC allophones: ~46% lifetime transfer to French (Bill 101 effect),
+#    ~30% to English. Spread over ~30 productive years gives annual rates
+#    of roughly 0.015 (allo→fr) and 0.010 (allo→en).
+#  - Outside QC: francophone-to-English transfer rate rose from 30% (1971)
+#    to 41% (2011). Lifetime ~35% over 30 years ≈ 0.012/year.
+#  - Outside QC allophones: ~50% lifetime English transfer ≈ 0.022/year.
+#  - QC francophones: very low transfer rate (~1.4% lifetime).
+#
+# The simulator linearly interpolates rates between periods.
+#
+# Use special province code "ROC" (Rest of Canada) to apply a value to all
+# provinces NOT explicitly listed for that period and (from_lang, to_lang)
+# pair. Explicit province entries override ROC.
+#
+# Columns: period_year, province, from_lang, to_lang, annual_prob, note
+# =============================================================================
+period_year,province,from_lang,to_lang,annual_prob,note
+# --- 1971 baseline ---
+1971,QC,allo,fr,0.010,Pre-Bill-101 era; French integration weaker
+1971,QC,allo,en,0.014,Allophones still defaulted toward English
+1971,QC,en,fr,0.001,Negligible
+1971,QC,fr,en,0.0005,Negligible
+1971,NB,allo,en,0.018,
+1971,NB,allo,fr,0.004,
+1971,NB,fr,en,0.004,Lower than ROC due to Acadian density
+1971,ROC,allo,en,0.022,Outside QC default
+1971,ROC,allo,fr,0.0005,Tiny francophone uptake outside QC
+1971,ROC,fr,en,0.012,Historic baseline (~30% lifetime over 30yr)
+# --- 1996 (Bill 101 fully in force, French uptake rising in QC) ---
+1996,QC,allo,fr,0.014,Bill 101 effect (1977) compounding
+1996,QC,allo,en,0.012,Diminishing English pull
+1996,QC,en,fr,0.002,Modest QC anglo→fr
+1996,QC,fr,en,0.0005,
+1996,NB,allo,en,0.017,
+1996,NB,allo,fr,0.005,
+1996,NB,fr,en,0.005,Acadian erosion
+1996,ROC,allo,en,0.022,
+1996,ROC,allo,fr,0.0005,
+1996,ROC,fr,en,0.014,Rising assimilation through 1990s (~36% lifetime)
+# --- 2021 (current) ---
+2021,QC,allo,fr,0.016,46% lifetime / 30 years
+2021,QC,allo,en,0.010,Stable
+2021,QC,en,fr,0.0025,
+2021,QC,fr,en,0.0005,
+2021,NB,allo,en,0.016,
+2021,NB,allo,fr,0.006,
+2021,NB,fr,en,0.006,
+2021,ROC,allo,en,0.020,Slight decline due to African francophone immigration
+2021,ROC,allo,fr,0.0006,Slight rise — francophone immigrant retention
+2021,ROC,fr,en,0.018,~41% lifetime per StatCan; rate accelerating
+# --- 2050 (trend continuation) ---
+2050,QC,allo,fr,0.018,Continued French integration policy (Bill 101)
+2050,QC,allo,en,0.009,
+2050,QC,en,fr,0.003,
+2050,QC,fr,en,0.0005,
+2050,NB,allo,en,0.015,
+2050,NB,allo,fr,0.007,
+2050,NB,fr,en,0.007,Trend continuation (gradual Acadian erosion)
+2050,ROC,allo,en,0.018,
+2050,ROC,allo,fr,0.0010,
+2050,ROC,fr,en,0.016,Slight decline from 2021 peak as African-origin immigrants retain more
+# --- 2100 (trend continuation) ---
+2100,QC,allo,fr,0.018,Stable — Bill 101 anchors QC French integration
+2100,QC,allo,en,0.009,
+2100,QC,en,fr,0.003,
+2100,QC,fr,en,0.0005,
+2100,NB,allo,en,0.014,
+2100,NB,allo,fr,0.008,
+2100,NB,fr,en,0.007,
+2100,ROC,allo,en,0.018,
+2100,ROC,allo,fr,0.0012,
+2100,ROC,fr,en,0.014,Stabilized at high but slightly lower assimilation

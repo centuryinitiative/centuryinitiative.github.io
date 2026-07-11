@@ -1,0 +1,31 @@
+# =============================================================================
+# INITIAL POPULATION — 1971 CENSUS
+# =============================================================================
+# Source: Statistics Canada, 1971 Census of Canada
+# Population in thousands; language shares are "language spoken most often
+# at home" (where available) or mother tongue as proxy for 1971.
+#
+# Notes:
+#  - Nunavut (NU) was carved out of NT in 1999; in 1971 it had ~0 separate pop.
+#  - "fr_share" = francophone share (French at home)
+#  - "allo_share" = allophone share (non-official languages at home)
+#  - anglophone share = 1 - fr_share - allo_share
+#  - Edit any row to change starting conditions. Shares must each be in [0,1]
+#    and fr_share + allo_share must be < 1.
+#
+# Columns: province_code, population_thousands, fr_share, allo_share
+# =============================================================================
+province_code,population_thousands,fr_share,allo_share
+NL,522,0.003,0.005
+PE,112,0.040,0.010
+NS,789,0.025,0.020
+NB,635,0.310,0.010
+QC,6028,0.808,0.060
+ON,7703,0.046,0.120
+MB,988,0.045,0.110
+SK,926,0.018,0.070
+AB,1628,0.014,0.080
+BC,2185,0.008,0.100
+YT,18,0.012,0.030
+NT,35,0.020,0.050
+NU,0,0.010,0.020

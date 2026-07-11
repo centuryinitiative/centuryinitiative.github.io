@@ -1,0 +1,39 @@
+# =============================================================================
+# SCENARIO DEFINITIONS
+# =============================================================================
+# Scenarios represent FRENCH LINGUISTIC OUTCOMES (not raw immigration size).
+# The key insight: high immigration volume tends to *dilute* the francophone
+# share (more non-francophone immigrants), while a high francophone share of
+# immigrants protects it. So:
+#
+# low  = PESSIMISTIC for French: somewhat higher volume, lower francophone
+#        share. Think: federal francophone targets quietly dropped, source
+#        countries shifting toward non-francophone regions.
+# mid  = TREND CONTINUATION: base volumes (immigration_volume.csv unchanged
+#        post-2025), francophone share follows immigration_composition.csv.
+#        Calibrated so total Canadian population reaches ~100M by 2100.
+# high = OPTIMISTIC for French: somewhat lower volume, higher francophone
+#        share. Federal targets met or exceeded, QC selection sustained.
+#
+# volume_multiplier_post2025: applied to mid_volume in immigration_volume.csv
+#                             ONLY for years > 2025. Mid scenario = 1.00.
+# fr_share_offset_post2025:   ADDED to fr_share in immigration_composition.csv
+#                             for years > 2025. Mid scenario = 0.00.
+#
+# The 1971-2025 calibration period is IDENTICAL across all three scenarios,
+# so they all reproduce the historical census record before diverging.
+#
+# Columns: scenario, volume_multiplier_post2025, fr_share_offset_post2025, roc_fr_share_post2025
+#
+# roc_fr_share_post2025 (optional): if set, REPLACES the ROC francophone share
+# from immigration_composition.csv for all years > 2025, held flat at that
+# value. Intended for the "francophone Africa" sensitivity scenarios.
+# Leave blank to use the default from immigration_composition.csv.
+# =============================================================================
+scenario,volume_multiplier_post2025,fr_share_offset_post2025,roc_fr_share_post2025
+low,1.10,-0.040,0.010
+mid,1.00,0.000,0.040
+high,0.85,0.040,0.089
+roc_4pct,1.00,0.000,0.040
+roc_6pct,1.00,0.000,0.060
+roc_8pct,1.00,0.000,0.080

@@ -1,0 +1,19 @@
+# Claude Code
+CLAUDE.md
+.claude/
+
+# Node / Observable build
+node_modules/
+site/node_modules/
+site/dist/
+.observablehq/cache/
+
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc

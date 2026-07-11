@@ -1,0 +1,57 @@
+# =============================================================================
+# FINE-GRAIN INITIAL AGE-SEX DISTRIBUTION — Canada 1971
+# =============================================================================
+# Source: Statistics Canada, 1971 Census of Canada (Cat. 92-715).
+#
+# This file defines the age-sex structure of the initial population.
+# The simulator draws agents' ages from this distribution when
+# initializing the 1971 population.
+#
+# Format: one row per (sex, age_group).
+# sex: M or F
+# age_group: lower bound of 5-year band (e.g. 0 = ages 0-4, 85 = ages 85+)
+# share: fraction of total population in this sex × age cell
+#        (all shares sum to 1.000 across M and F rows combined)
+#
+# Notes:
+#   - Baby boom cohorts visible in ages 10–24 (born 1947–1961)
+#   - Slight male excess at birth; female excess at older ages
+#   - 85+ treated as open-ended; agents drawn uniformly from ages 85–95
+# =============================================================================
+sex,age_group,share
+M,0,0.0434
+M,5,0.0478
+M,10,0.0466
+M,15,0.0406
+M,20,0.0353
+M,25,0.0313
+M,30,0.0281
+M,35,0.0267
+M,40,0.0250
+M,45,0.0228
+M,50,0.0199
+M,55,0.0166
+M,60,0.0138
+M,65,0.0107
+M,70,0.0079
+M,75,0.0052
+M,80,0.0029
+M,85,0.0018
+F,0,0.0414
+F,5,0.0456
+F,10,0.0445
+F,15,0.0390
+F,20,0.0347
+F,25,0.0310
+F,30,0.0282
+F,35,0.0270
+F,40,0.0258
+F,45,0.0238
+F,50,0.0214
+F,55,0.0181
+F,60,0.0154
+F,65,0.0125
+F,70,0.0096
+F,75,0.0066
+F,80,0.0038
+F,85,0.0027

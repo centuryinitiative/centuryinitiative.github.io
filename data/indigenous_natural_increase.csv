@@ -1,0 +1,37 @@
+# =============================================================================
+# INDIGENOUS PROJECTION — ANNUAL NATURAL-INCREASE ASSUMPTIONS (post-2021)
+# =============================================================================
+# Applied to the Indigenous population AFTER the last census anchor (2021).
+# The rest of Canada's population (denominator) comes from the main simulation
+# and keeps receiving immigration; the Indigenous population does NOT (new
+# immigrants are treated as non-Indigenous). So the Indigenous *share* evolves
+# from the interplay of higher Indigenous natural increase vs. immigration-fed
+# growth of the total.
+#
+# Modelling choices worth knowing:
+#  - Fertility is assumed to CONVERGE DOWN to the national (below-replacement)
+#    level. A below-replacement group cannot naturally increase forever, so
+#    identity_ni must eventually go NEGATIVE.
+#  - BUT it stays positive for the first couple of decades because of
+#    POPULATION MOMENTUM: the Indigenous age structure is very young (median
+#    age ~33 vs ~41 nationally), so births still exceed deaths for a while even
+#    as fertility falls. NI then crosses zero (~2050) and turns negative as the
+#    age structure matures — the population peaks and then shrinks in absolute
+#    terms.
+#  - We deliberately DO NOT extrapolate past reclassification / "ethnic
+#    mobility" gains — treated as a one-time historical effect, not a driver.
+#  - mothertongue_ni sits below identity_ni throughout (language shift on top of
+#    the demographic decline) and is already negative in the projection window.
+#
+# Rates are annual fractions of the current Indigenous population. Linear
+# interpolation between rows; held flat outside the listed range.
+#
+# Columns: year, identity_ni, mothertongue_ni
+# =============================================================================
+year,identity_ni,mothertongue_ni
+2021,0.0100,0.0010
+2035,0.0055,0.0000
+2050,0.0000,-0.0020
+2075,-0.0035,-0.0040
+2100,-0.0045,-0.0050
+2150,-0.0055,-0.0060
