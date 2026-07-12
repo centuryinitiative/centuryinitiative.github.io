@@ -146,6 +146,7 @@ def build_bar_race(
     title_fontsize: int = 13,
     tick_fontsize: int = 8,
     xlabel_fontsize: int = 10,
+    left_margin: float = 0.13,
 ):
     labels    = list(series.keys())
     n_labels  = len(labels)
@@ -158,6 +159,7 @@ def build_bar_race(
 
     fig, ax = plt.subplots(figsize=figsize, facecolor=BG)
     ax.set_facecolor(BG)
+    fig.subplots_adjust(left=left_margin, right=0.97)
     for sp in ax.spines.values():
         sp.set_visible(False)
 
@@ -247,6 +249,8 @@ _do("1") and build_bar_race(
     xlabel="Number of francophones",
     out_path="plots/fg_bcr1_prov_fr_pop.mp4",
     value_fmt_fn=fmt_pop,
+    label_fontsize=15,
+    value_fontsize=12,
 )
 
 print("\nfg_BCR2 — Provincial total population")
@@ -268,11 +272,12 @@ _do("3") and build_bar_race(
     xlabel="Number of individuals",
     out_path="plots/fg_bcr3_lang_group_pop.mp4",
     value_fmt_fn=fmt_pop,
-    label_fontsize=17,
+    label_fontsize=16,
     value_fontsize=15,
     title_fontsize=16,
     tick_fontsize=12,
     xlabel_fontsize=13,
+    left_margin=0.19,
 )
 
 # ── fg_BCR3b: Side-by-side pie chart animation (QC vs ROC) ───────────────────
