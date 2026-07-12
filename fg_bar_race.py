@@ -332,7 +332,7 @@ def build_pie_animation(
     _legend = fig.legend(
         handles=legend_handles,
         loc="lower center", ncol=3,
-        framealpha=0, labelcolor=TEXT, fontsize=12,
+        framealpha=0, labelcolor=TEXT, fontsize=15,
         bbox_to_anchor=(0.5, 0.01),
     )
     _suptitle = fig.suptitle(
