@@ -8,9 +8,11 @@ toc: false
 Build your own view. Pick a scenario, a metric, and the provinces or territories you want to compare.
 
 ```js
-import {provTotal, nationalTotal, PROV_COLORS} from "../components/lib.js";
+import {provTotal, nationalTotal, PROV_COLORS, valueByCode, METRICS} from "../components/lib.js";
 const data = await FileAttachment("../data/canada.json").json();
+const geo = await FileAttachment("../data/canada-provinces.geojson").json();
 const {years, provinces, province_names, scenarios} = data.meta;
+const END = 2100;
 ```
 
 ```js
@@ -62,10 +64,66 @@ Plot.plot({
 })
 ```
 
+## The map, any year to 2100
+
+```js
+const mapMetric = view(Inputs.radio(
+  new Map([["Population", "pop"], ["Francophone share", "frshare"], ["Allophone share", "alloshare"]]),
+  {value: "frshare", label: "Metric"}
+));
+```
+
+```js
+const yearInput = Inputs.range([1971, END], {step: 1, value: 1971, width: 320});
+yearInput.querySelector("input").style.width = "min(320px, 70vw)";
+const mapYear = Generators.input(yearInput);
+```
+
+```js
+const i = years.indexOf(Math.min(Math.round(mapYear), END));
+const vals = valueByCode(data, "mid", mapMetric, i);
+const cfg = METRICS[mapMetric];
+```
+
+<div class="mapwrap">
+  <div class="mapyear">${Math.round(mapYear)}</div>
+  <div class="mapscrub">${yearInput}</div>
+
+```js
+Plot.plot({
+  width,
+  height: width < 560 ? 400 : 520,
+  marginLeft: 0, marginRight: 0,
+  projection: {type: "conic-conformal", domain: geo, rotate: [96, 0], parallels: [49, 77]},
+  color: {
+    type: cfg.type, scheme: cfg.scheme, domain: cfg.domain, clamp: true,
+    legend: true, label: cfg.label, tickFormat: mapMetric === "pop" ? "~s" : ((d) => d + "%")
+  },
+  marks: [
+    Plot.geo(geo, {
+      fill: (d) => vals.get(d.properties.code),
+      stroke: "#0e1117", strokeWidth: 0.8,
+      title: (d) => `${d.properties.name}\n${cfg.label}: ${cfg.fmt(vals.get(d.properties.code))}`,
+      tip: true
+    })
+  ]
+})
+```
+
+</div>
+
+<p class="caption">Mid scenario. Population is on a log scale — watch Ontario, Alberta and British Columbia ignite while the Atlantic stays dim; switch to <em>Francophone share</em> and Quebec glows alone against a fading country.</p>
+
 <div class="note">
 Everything here is client-side over a single 185&nbsp;KB data file — no server, no tracking. Values come from the same agent-based simulation described in the <a href="/en/methodology">Methodology</a>.
 </div>
 
 <style>
 .note { margin: 2rem 0; padding: 1rem 1.25rem; border-left: 3px solid var(--theme-foreground-focus); background: var(--theme-background-alt); border-radius: 0 6px 6px 0; }
+.mapwrap { position: relative; margin-top: 1rem; }
+.mapyear { position: absolute; top: 0; left: 4px; z-index: 2; pointer-events: none;
+  font-size: clamp(3rem, 10vw, 7rem); font-weight: 800; line-height: 0.85;
+  letter-spacing: -0.05em; color: var(--theme-foreground); opacity: 0.12; font-variant-numeric: tabular-nums; }
+.mapscrub { position: absolute; top: 8px; right: 4px; z-index: 2; }
+.caption { color: var(--theme-foreground-muted); font-size: 0.9rem; margin: 1rem 0 0; line-height: 1.5; }
 </style>

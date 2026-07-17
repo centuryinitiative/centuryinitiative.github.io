@@ -22,10 +22,11 @@ sidebar: false
 ```js
 import {
   nationalLang, provinceRows, nationalTotal, provTotal, qcShareBand,
-  valueByCode, METRICS, LANG_COLORS, PROV_COLORS
+  valueByCode, METRICS, LANG_COLORS, PROV_COLORS, animatedFrenchMap
 } from "../components/lib.js";
 const data = await FileAttachment("../data/canada.json").json();
 const geo = await FileAttachment("../data/canada-provinces.geojson").json();
+const naGeo = await FileAttachment("../data/north-america.geojson").json();
 const {years, provinces, province_names, scenarios} = data.meta;
 const END = 2100;                       // the horizon this story is about
 const iEnd = years.indexOf(END);
@@ -327,58 +328,23 @@ mkVideo(FileAttachment("../media/fg_bcr5_age_pyramid.mp4"), FileAttachment("../m
 <!-- ============================ EXPLORE ============================ -->
 <div class="explore">
 
-## <span class="section-eyebrow">Explore it yourself</span>The map, any year to 2100
+## <span class="section-eyebrow">The map that says it all</span>The retreat of French across North America
+
+<p class="mapintro">Colored by the language spoken at home. Only <b>Quebec</b> and <b>New Brunswick</b> — the home of Canada's French — carry a color: the deeper the <span class="tag tag--fr">blue</span>, the higher the share of people speaking French at home. As that share falls they slide toward <span class="tag tag--en">red</span>, until they are barely distinguishable from the rest of a continent that never spoke much French to begin with. Watch the two provinces fade from <b>1971 to 2100</b>. <em>Click the map to pause.</em></p>
 
 ```js
-const metric = view(Inputs.radio(
-  new Map([["Population", "pop"], ["Francophone share", "frshare"], ["Allophone share", "alloshare"]]),
-  {value: "frshare", label: null}
-));
+import * as d3 from "npm:d3";
 ```
 
 ```js
-const yearInput = Inputs.range([1971, END], {step: 1, value: 1971, width: 320});
-yearInput.querySelector("input").style.width = "min(320px, 70vw)";
-const year = Generators.input(yearInput);
+animatedFrenchMap({d3, geo: naGeo, series: data.series.mid, years, END, width, invalidation,
+  labels: {zoom: "Zoom · Québec · New England · Ontario · N.B.", lessFr: "0% French", moreFr: "100% French", qc: "Québec", nb: "N.B."}})
 ```
 
-```js
-const i = years.indexOf(Math.min(Math.round(year), END));
-const vals = valueByCode(data, "mid", metric, i);
-const cfg = METRICS[metric];
-```
-
-<div class="mapwrap">
-  <div class="mapyear">${Math.round(year)}</div>
-  <div class="mapscrub">${yearInput}</div>
-
-```js
-Plot.plot({
-  width,
-  height: width < 560 ? 400 : 520,
-  marginLeft: 0, marginRight: 0,
-  projection: {type: "conic-conformal", domain: geo, rotate: [96, 0], parallels: [49, 77]},
-  color: {
-    type: cfg.type, scheme: cfg.scheme, domain: cfg.domain, clamp: true,
-    legend: true, label: cfg.label, tickFormat: metric === "pop" ? "~s" : ((d) => d + "%")
-  },
-  marks: [
-    Plot.geo(geo, {
-      fill: (d) => vals.get(d.properties.code),
-      stroke: "#0e1117", strokeWidth: 0.8,
-      title: (d) => `${d.properties.name}\n${cfg.label}: ${cfg.fmt(vals.get(d.properties.code))}`,
-      tip: true
-    })
-  ]
-})
-```
-
-</div>
-
-<p class="caption caption--wide">Mid scenario. Population is on a log scale — watch Ontario, Alberta and British Columbia ignite while the Atlantic stays dim; switch to <em>Francophone share</em> and Quebec glows alone against a fading country.</p>
+<p class="caption caption--wide">Mid scenario. Only Quebec and New Brunswick are colored by the model's home-language projection; the rest of North America is a flat backdrop (the model does not project the United States). The panel on the right zooms the northeast — Quebec, eastern Ontario, New Brunswick and the New England border.</p>
 
 <div class="note">
-Dig into any province in the <a href="/en/explorer">Explorer</a>, see <a href="/en/indigenous">Indigenous&nbsp;Canada</a>, or read the <a href="/en/methodology">Methodology</a> and its caveats. The videos above are the model's own bar-chart-races, 1971&nbsp;→&nbsp;2100, mid scenario.
+Explore any year, metric and province on the interactive map in the <a href="/en/explorer">Explorer</a>, see <a href="/en/indigenous">Indigenous&nbsp;Canada</a>, or read the <a href="/en/methodology">Methodology</a> and its caveats. The videos above are the model's own bar-chart-races, 1971&nbsp;→&nbsp;2100, mid scenario.
 </div>
 
 </div>
@@ -498,6 +464,9 @@ invalidation.then(() => { _sObs.disconnect(); document.body.classList.remove("sc
 }
 .chartwrap, .explore { max-width: 960px; margin: 0 auto; padding: 6rem 1.25rem; }
 .chartwrap--wide { max-width: none; padding-left: 2rem; padding-right: 2rem; }
+/* the map section is full-bleed like the wide charts, so its intro/note match the map */
+.explore { max-width: none; padding-left: 2rem; padding-right: 2rem; }
+.explore .note { max-width: none; }
 .chartwrap h2, .explore h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); letter-spacing: -0.02em;
   margin: 0 0 1.5rem; font-weight: 700; line-height: 1.1; }
 .explore h2 { margin-top: 4rem; }
@@ -510,6 +479,29 @@ invalidation.then(() => { _sObs.disconnect(); document.body.classList.remove("sc
   font-size: clamp(3.5rem, 11vw, 8rem); font-weight: 800; line-height: 0.85;
   letter-spacing: -0.05em; color: #e8eaed; opacity: 0.12; font-variant-numeric: tabular-nums; }
 .mapscrub { position: absolute; top: 8px; right: 4px; z-index: 2; }
+
+/* ---- animated North America French-decline map ---- */
+.mapintro { color: #cbd2dc; font-size: clamp(1rem, 2.1vw, 1.18rem); line-height: 1.6;
+  max-width: none; margin: 0 0 1.6rem; }
+.namap { margin: 0.5rem 0 0; cursor: pointer; }
+.namap__panes { display: flex; gap: 14px; align-items: stretch; }
+.namap__panes--stack { flex-direction: column; }
+.namap__pane { position: relative; flex: 0 0 auto; }
+.namap__pane--main { flex: 1 1 60%; }
+.namap__pane--inset { flex: 1 1 40%; }
+.namap__year { position: absolute; top: 4px; left: 12px; z-index: 2; pointer-events: none;
+  font-size: clamp(2.6rem, 7vw, 5.5rem); font-weight: 800; line-height: 0.85;
+  letter-spacing: -0.05em; color: #e8eaed; opacity: 0.55; font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 18px rgba(0,0,0,0.85); }
+.namap__hint { position: absolute; top: 6px; left: 10px; z-index: 2; pointer-events: none;
+  font-size: 0.7rem; letter-spacing: 0.04em; color: #c7ccd4; opacity: 0.85;
+  background: rgba(9,12,17,0.55); padding: 2px 7px; border-radius: 4px; }
+.namap__legend { display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+  margin-top: 0.9rem; font-size: 0.78rem; color: var(--ink-muted); }
+.namap__bar { display: inline-block; width: min(240px, 45vw); height: 10px; border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.12); }
+.namap.is-paused .namap__pane--main::after { content: "❚❚"; position: absolute; top: 8px; right: 12px;
+  color: #e8eaed; opacity: 0.5; font-size: 0.9rem; z-index: 2; }
 
 /* ---- stat cards ---- */
 .statgrid { margin-top: 1.5rem; }
