@@ -43,6 +43,7 @@ const _vObs = new IntersectionObserver((entries) => {
 invalidation.then(() => _vObs.disconnect());
 
 // Build a full-bleed <video> from two FileAttachments (poster + clip).
+// On mobile a fullscreen button is overlaid so users can tap to expand.
 function mkVideo(mp4, jpg) {
   const v = document.createElement("video");
   v.muted = true; v.loop = true; v.playsInline = true; v.preload = "metadata";
@@ -50,7 +51,20 @@ function mkVideo(mp4, jpg) {
   v.className = "act__video";
   Promise.all([mp4.href, jpg.href]).then(([m, p]) => { v.poster = p; v.src = m; });
   _vObs.observe(v);
-  return v;
+  const btn = document.createElement("button");
+  btn.className = "act__fs-btn";
+  btn.setAttribute("aria-label", "Fullscreen");
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+  btn.addEventListener("click", () => {
+    if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); // iOS Safari
+    else if (v.requestFullscreen) v.requestFullscreen();
+    else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+  });
+  const wrap = document.createElement("div");
+  wrap.className = "act__video-wrap";
+  wrap.appendChild(v);
+  wrap.appendChild(btn);
+  return wrap;
 }
 ```
 
@@ -151,7 +165,7 @@ Plot.plot({
 })
 ```
 
-<p class="caption caption--wide">Left of the dashed line (1971–2025) is calibrated to the census; right of it is projection. Each province's post-2025 path is driven by immigration plus a net-growth rate set at a few <a href="/en/methodology">anchor years</a> and interpolated between them — which is why the lines bend at round dates rather than curving smoothly. Quebec's visible <b>plateau around 2030</b> is one such artifact: its net natural increase is anchored high in 2024 and negative by 2030, so it crosses zero in the late 2020s and briefly cancels immigration (≈−125k births-minus-deaths against ≈+110k newcomers) before growth resumes. Read the <em>trend</em>, not the year-by-year kinks — see the <a href="/en/methodology">Methodology</a>.</p>
+<p class="caption caption--wide">Left of the dashed line (1971–2025) is calibrated to the census; right of it is projection. Each province's post-2025 path is driven by immigration plus a net-growth rate set at a few <a href="/en/methodology">anchor years</a> and interpolated between them — which is why the lines bend at round dates rather than curving smoothly. Quebec's visible <b>plateau around 2030</b> is grounded in official projections, not a modeling quirk: Statistics Canada's 2024-based projections and the Institut de la statistique du Québec both have Quebec's natural increase turning negative in the late 2020s — ISQ reports deaths exceeding births since 2024 and projects negative natural increase from 2027. In the model its net natural increase crosses zero in the late 2020s and briefly cancels immigration (≈−125k births-minus-deaths against ≈+110k newcomers) before growth resumes. Read the <em>trend</em>, not the year-by-year kinks — see the <a href="/en/methodology">Methodology</a>.</p>
 
 <div class="grid grid-cols-3 statgrid">
   <div class="card"><h2>Canada's population</h2><span class="big">42M → ${(nationalTotal(data.series.mid, provinces)[iEnd]/1e6).toFixed(0)}M</span><span class="muted">2025 → 2100 (mid)</span></div>
@@ -431,6 +445,15 @@ invalidation.then(() => { _sObs.disconnect(); document.body.classList.remove("sc
 .act__media > * { display: flex; align-items: center; justify-content: center;
   width: 100%; height: 100%; margin: 0; }
 .act__video { max-width: 100%; max-height: 94vh; object-fit: contain; background: var(--story-bg); }
+.act__video-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.act__fs-btn {
+  display: none; /* desktop: hidden */
+  position: absolute; bottom: 10px; right: 10px; z-index: 5;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px; color: #e8eaed; padding: 7px 8px; cursor: pointer;
+  touch-action: manipulation; line-height: 0;
+}
+.act__fs-btn:hover { background: rgba(0,0,0,0.78); }
 .act__steps { position: relative; z-index: 2; margin-top: -100vh;
   padding-bottom: 8vh; pointer-events: none; }
 .step { min-height: 92vh; display: flex; align-items: flex-end;
@@ -532,6 +555,8 @@ invalidation.then(() => { _sObs.disconnect(); document.body.classList.remove("sc
   .act__media { position: static; height: auto; overflow: visible; }
   .act__media > * { height: auto; }
   .act__video { max-width: 100%; max-height: none; width: 100%; }
+  .act__video-wrap { height: auto; }
+  .act__fs-btn { display: flex; }
   .act__steps { margin-top: 0; padding-bottom: 1.5rem; }
   .step, .step--lead { min-height: 0; display: block; align-items: initial;
     padding: 1.1rem 0.9rem 0; }

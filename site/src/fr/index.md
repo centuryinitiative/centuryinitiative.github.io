@@ -43,6 +43,7 @@ const _vObs = new IntersectionObserver((entries) => {
 invalidation.then(() => _vObs.disconnect());
 
 // Construit une <video> pleine largeur à partir de deux FileAttachments (affiche + clip).
+// Sur mobile, un bouton plein écran est superposé pour que l'utilisateur puisse agrandir la vidéo.
 function mkVideo(mp4, jpg) {
   const v = document.createElement("video");
   v.muted = true; v.loop = true; v.playsInline = true; v.preload = "metadata";
@@ -50,7 +51,20 @@ function mkVideo(mp4, jpg) {
   v.className = "act__video";
   Promise.all([mp4.href, jpg.href]).then(([m, p]) => { v.poster = p; v.src = m; });
   _vObs.observe(v);
-  return v;
+  const btn = document.createElement("button");
+  btn.className = "act__fs-btn";
+  btn.setAttribute("aria-label", "Plein écran");
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+  btn.addEventListener("click", () => {
+    if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); // iOS Safari
+    else if (v.requestFullscreen) v.requestFullscreen();
+    else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+  });
+  const wrap = document.createElement("div");
+  wrap.className = "act__video-wrap";
+  wrap.appendChild(v);
+  wrap.appendChild(btn);
+  return wrap;
 }
 ```
 
@@ -151,7 +165,7 @@ Plot.plot({
 })
 ```
 
-<p class="caption caption--wide">À gauche de la ligne pointillée (1971–2025), le modèle est calibré sur le recensement ; à droite, c'est une projection. La trajectoire de chaque province après 2025 est déterminée par l'immigration et par un taux de croissance nette fixé à quelques <a href="/fr/methodology">années d'ancrage</a> et interpolé entre elles — d'où des lignes qui plient à des dates rondes plutôt que de s'incurver en douceur. Le <b>plateau visible du Québec vers 2030</b> en est un artefact : son accroissement naturel net est ancré haut en 2024 et négatif dès 2030, si bien qu'il croise le zéro à la fin des années 2020 et annule brièvement l'immigration (≈−125 000 naissances-moins-décès contre ≈+110 000 arrivées) avant que la croissance ne reprenne. Lisez la <em>tendance</em>, pas les soubresauts d'une année à l'autre — voir la <a href="/fr/methodology">Méthodologie</a>.</p>
+<p class="caption caption--wide">À gauche de la ligne pointillée (1971–2025), le modèle est calibré sur le recensement ; à droite, c'est une projection. La trajectoire de chaque province après 2025 est déterminée par l'immigration et par un taux de croissance nette fixé à quelques <a href="/fr/methodology">années d'ancrage</a> et interpolé entre elles — d'où des lignes qui plient à des dates rondes plutôt que de s'incurver en douceur. Le <b>plateau visible du Québec vers 2030</b> repose sur des projections officielles, et non sur un artefact de modélisation : les projections de Statistique Canada fondées sur 2024 et l'Institut de la statistique du Québec prévoient tous deux un accroissement naturel du Québec qui devient négatif à la fin des années 2020 — l'ISQ constate un nombre de décès supérieur à celui des naissances depuis 2024 et projette un accroissement naturel négatif dès 2027. Dans le modèle, son accroissement naturel net croise le zéro à la fin des années 2020 et annule brièvement l'immigration (≈−125 000 naissances-moins-décès contre ≈+110 000 arrivées) avant que la croissance ne reprenne. Lisez la <em>tendance</em>, pas les soubresauts d'une année à l'autre — voir la <a href="/fr/methodology">Méthodologie</a>.</p>
 
 <div class="grid grid-cols-3 statgrid">
   <div class="card"><h2>Population du Canada</h2><span class="big">42M → ${(nationalTotal(data.series.mid, provinces)[iEnd]/1e6).toFixed(0)}M</span><span class="muted">2025 → 2100 (interm.)</span></div>
@@ -431,6 +445,15 @@ invalidation.then(() => { _sObs.disconnect(); document.body.classList.remove("sc
 .act__media > * { display: flex; align-items: center; justify-content: center;
   width: 100%; height: 100%; margin: 0; }
 .act__video { max-width: 100%; max-height: 94vh; object-fit: contain; background: var(--story-bg); }
+.act__video-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.act__fs-btn {
+  display: none; /* desktop: hidden */
+  position: absolute; bottom: 10px; right: 10px; z-index: 5;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px; color: #e8eaed; padding: 7px 8px; cursor: pointer;
+  touch-action: manipulation; line-height: 0;
+}
+.act__fs-btn:hover { background: rgba(0,0,0,0.78); }
 .act__steps { position: relative; z-index: 2; margin-top: -100vh;
   padding-bottom: 8vh; pointer-events: none; }
 .step { min-height: 92vh; display: flex; align-items: flex-end;
@@ -533,6 +556,8 @@ invalidation.then(() => { _sObs.disconnect(); document.body.classList.remove("sc
   .act__media { position: static; height: auto; overflow: visible; }
   .act__media > * { height: auto; }
   .act__video { max-width: 100%; max-height: none; width: 100%; }
+  .act__video-wrap { height: auto; }
+  .act__fs-btn { display: flex; }
   .act__steps { margin-top: 0; padding-bottom: 1.5rem; }
   .step, .step--lead { min-height: 0; display: block; align-items: initial;
     padding: 1.1rem 0.9rem 0; }
